@@ -1,6 +1,17 @@
-node_modules/
-frontend/dist/
-backend/venv/
+# Python
+venv/
 __pycache__/
+*.pyc
 *.db
+
+# Secrets
 .env
+backend/.env
+
+# Node
+node_modules/
+dist/
+
+# Data and OS
+backend/data/raw/
+.DS_Store
