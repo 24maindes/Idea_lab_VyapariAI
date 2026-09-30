@@ -1,0 +1,2 @@
+# VyapariAI
+IDEA LAB PROJECT
