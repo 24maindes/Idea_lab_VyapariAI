@@ -4,9 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 from app import models  # noqa: F401 - ensures models are registered before create_all
 from app.routers import auth
+from app.routers import reference
 
-from app.routers import reference app.include_router(reference.router)
-# #Creates vyapariai.db and the users table on first run
+# Creates the database tables on first run
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="VyapariAI API")
@@ -23,8 +23,4 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
-
-
-@app.get("/")
-def health_check():
-    return {"status": "ok", "service": "VyapariAI API"}
+app.include_router(reference.router)
