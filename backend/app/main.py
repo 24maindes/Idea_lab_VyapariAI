@@ -5,7 +5,8 @@ from app.database import Base, engine
 from app import models  # noqa: F401 - ensures models are registered before create_all
 from app.routers import auth
 
-# Creates vyapariai.db and the users table on first run
+from app.routers import reference app.include_router(reference.router)
+# #Creates vyapariai.db and the users table on first run
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="VyapariAI API")
