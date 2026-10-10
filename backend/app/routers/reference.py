@@ -16,7 +16,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.auth import get_current_user
+from app.routers.auth import get_current_user
 from app.database import get_db
 from app.models import ReferencePrice
 from app.schemas import CamelModel

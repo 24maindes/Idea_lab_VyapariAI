@@ -3,6 +3,7 @@ venv/
 __pycache__/
 *.pyc
 *.db
+.pytest_cache/
 
 # Secrets
 .env
@@ -11,10 +12,9 @@ backend/.env
 # Node
 node_modules/
 dist/
+frontend/tests/smoke/smoke.mjs
 
-# Data and OS
-backend/data/raw/
+# Data and logs
+backend/data/raw/*.csv
+backend/logs/
 .DS_Store
-backend/data/raw/
-backend/data/*.db
-*.db

@@ -1,26 +1,13 @@
 import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Eye, EyeOff, Store } from "lucide-react";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
+import { useAuth } from "../context/AuthContext";
 
-// FastAPI sends `detail` as a plain string for our own HTTPExceptions
-// (e.g. "An account with this email already exists."), but as an ARRAY of
-// {loc, msg, type} objects for automatic pydantic validation errors
-// (e.g. password too short). Without this, the array case renders as
-// "[object Object]" in the UI.
-function extractErrorMessage(data) {
-  const detail = data?.detail;
-  if (!detail) return "Signup failed";
-  if (typeof detail === "string") return detail;
-  if (Array.isArray(detail)) {
-    return detail
-      .map((d) => d.msg || JSON.stringify(d))
-      .join(" ");
-  }
-  return "Signup failed";
-}
-
-export default function Signup({ onSignup, onGoToLogin }) {
+export default function Signup() {
+  const { signup, token, user } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -47,25 +34,20 @@ export default function Signup({ onSignup, onGoToLogin }) {
     if (Object.keys(newErrors).length > 0) return;
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: form.fullName,
-          email: form.email,
-          password: form.password,
-        }),
+      // AuthContext calls POST /api/auth/signup (it returns a token, so the user is logged in)
+      await signup({
+        fullName: form.fullName,
+        email: form.email,
+        password: form.password,
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(extractErrorMessage(data));
-
-      localStorage.setItem("vyapariToken", data.access_token);
-      localStorage.setItem("vyapariUser", JSON.stringify(data.user));
-      onSignup();
+      navigate("/shop-setup", { replace: true });
     } catch (err) {
       setErrors({ email: err.message });
     }
   };
+
+  // already logged in -> go to the app
+  if (token && user) return <Navigate to="/dashboard" replace />;
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-bg px-6 py-10">
@@ -144,7 +126,7 @@ export default function Signup({ onSignup, onGoToLogin }) {
         <p className="mt-5 text-center text-[13px] text-ink/60">
           Already have an account?{" "}
           <button
-            onClick={onGoToLogin}
+            onClick={() => navigate("/login")}
             className="font-medium text-secondary hover:text-primary"
           >
             Login

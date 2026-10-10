@@ -1,0 +1,76 @@
+commodity,model,mape,rmse,is_best
+Chana,naive,1.231,1.243,False
+Chana,linear,0.873,0.913,False
+Chana,rf,1.735,1.684,False
+Chana,xgb,2.199,2.062,False
+Chana,holt_winters,0.76,0.8,True
+Milk,naive,0.802,0.473,False
+Milk,linear,0.911,0.505,False
+Milk,rf,0.857,0.501,False
+Milk,xgb,0.974,0.554,False
+Milk,holt_winters,0.65,0.389,True
+Moong Dal,naive,0.82,1.095,False
+Moong Dal,linear,0.582,0.803,False
+Moong Dal,rf,1.042,1.369,False
+Moong Dal,xgb,1.106,1.442,False
+Moong Dal,holt_winters,0.569,0.783,True
+Mustard Oil,naive,0.851,1.531,False
+Mustard Oil,linear,0.604,1.118,False
+Mustard Oil,rf,0.723,1.324,False
+Mustard Oil,xgb,0.746,1.381,False
+Mustard Oil,holt_winters,0.588,1.093,True
+Onion,naive,0.995,0.341,False
+Onion,linear,1.074,0.366,False
+Onion,rf,1.626,0.543,False
+Onion,xgb,1.771,0.587,False
+Onion,holt_winters,0.807,0.285,True
+Paneer,naive,0.979,4.623,False
+Paneer,linear,0.715,3.519,True
+Paneer,rf,1.018,4.651,False
+Paneer,xgb,1.52,6.703,False
+Paneer,holt_winters,0.802,3.841,False
+Potato,naive,1.562,0.504,False
+Potato,linear,0.97,0.313,False
+Potato,rf,1.469,0.445,False
+Potato,xgb,1.498,0.487,False
+Potato,holt_winters,0.882,0.297,True
+Rice,naive,0.756,0.354,False
+Rice,linear,0.6,0.288,True
+Rice,rf,0.721,0.338,False
+Rice,xgb,0.971,0.447,False
+Rice,holt_winters,0.602,0.286,False
+Salt,naive,0.976,0.249,False
+Salt,linear,0.852,0.221,False
+Salt,rf,0.959,0.246,False
+Salt,xgb,0.995,0.253,False
+Salt,holt_winters,0.806,0.21,True
+Soyabean Oil,naive,0.894,1.385,False
+Soyabean Oil,linear,0.821,1.275,False
+Soyabean Oil,rf,0.787,1.252,True
+Soyabean Oil,xgb,0.83,1.32,False
+Soyabean Oil,holt_winters,0.793,1.231,False
+Sugar,naive,0.731,0.346,False
+Sugar,linear,0.556,0.274,False
+Sugar,rf,0.726,0.347,False
+Sugar,xgb,1.319,0.609,False
+Sugar,holt_winters,0.544,0.263,True
+Tea,naive,0.794,1.229,False
+Tea,linear,0.646,1.035,False
+Tea,rf,0.787,1.236,False
+Tea,xgb,0.851,1.33,False
+Tea,holt_winters,0.613,1.004,True
+Tomato,naive,1.764,0.728,False
+Tomato,linear,1.267,0.5,False
+Tomato,rf,1.595,0.625,False
+Tomato,xgb,1.697,0.668,False
+Tomato,holt_winters,1.069,0.432,True
+Toor Dal,naive,1.022,1.778,False
+Toor Dal,linear,0.811,1.438,False
+Toor Dal,rf,1.695,2.985,False
+Toor Dal,xgb,1.864,3.225,False
+Toor Dal,holt_winters,0.738,1.326,True
+Wheat Atta,naive,0.92,0.37,False
+Wheat Atta,linear,0.789,0.317,False
+Wheat Atta,rf,0.807,0.326,False
+Wheat Atta,xgb,1.189,0.47,False
+Wheat Atta,holt_winters,0.741,0.3,True

@@ -1,0 +1,138 @@
+{
+  "date": "2026-10-09",
+  "server": "http://127.0.0.1:8000",
+  "steps": [
+    {
+      "step": "signup a new user",
+      "ok": true,
+      "ms": 275.8,
+      "detail": "e2e798260@test.com"
+    },
+    {
+      "step": "create shop",
+      "ok": true,
+      "ms": 9.6,
+      "detail": "E2E Store"
+    },
+    {
+      "step": "create 3 products linked to market data",
+      "ok": true,
+      "ms": 27.2,
+      "detail": "3 products"
+    },
+    {
+      "step": "create 2 suppliers",
+      "ok": true,
+      "ms": 17.8,
+      "detail": "2 suppliers"
+    },
+    {
+      "step": "record 6 purchases (one 42 % above market)",
+      "ok": true,
+      "ms": 125.3,
+      "detail": "6 purchases"
+    },
+    {
+      "step": "abnormal purchase flagged at once",
+      "ok": true,
+      "ms": 0.0,
+      "detail": "high"
+    },
+    {
+      "step": "record 10 sales",
+      "ok": true,
+      "ms": 70.6,
+      "detail": "10 sales"
+    },
+    {
+      "step": "fair price - all products",
+      "ok": true,
+      "ms": 9.3,
+      "detail": "3 rows"
+    },
+    {
+      "step": "fair price - one product (detail)",
+      "ok": true,
+      "ms": 6.0,
+      "detail": "Fair"
+    },
+    {
+      "step": "fair price - live check",
+      "ok": true,
+      "ms": 5.2,
+      "detail": "Rs 60 is 42.7% above today's market price of Rs 42.04"
+    },
+    {
+      "step": "forecast (7 days)",
+      "ok": true,
+      "ms": 30.5,
+      "detail": "linear +0.4% Stable"
+    },
+    {
+      "step": "forecast model comparison",
+      "ok": true,
+      "ms": 3.8,
+      "detail": "5 models"
+    },
+    {
+      "step": "recommendations - what to buy",
+      "ok": true,
+      "ms": 139.0,
+      "detail": "Onion:Buy Limited, Sugar:Wait, Rice:Wait"
+    },
+    {
+      "step": "recommendations - selling price",
+      "ok": true,
+      "ms": 7.9,
+      "detail": "Onion 34.5, Rice 47.0, Sugar 46.0"
+    },
+    {
+      "step": "suppliers - comparison",
+      "ok": true,
+      "ms": 6.1,
+      "detail": "2 suppliers"
+    },
+    {
+      "step": "alerts - scan and list",
+      "ok": true,
+      "ms": 24.7,
+      "detail": "1 alerts"
+    },
+    {
+      "step": "inventory",
+      "ok": true,
+      "ms": 6.9,
+      "detail": "3 rows"
+    },
+    {
+      "step": "dashboard summary",
+      "ok": true,
+      "ms": 34.9,
+      "detail": "3 recommendations, 1 unread alerts"
+    },
+    {
+      "step": "dashboard price trend",
+      "ok": true,
+      "ms": 8.7,
+      "detail": "56 days"
+    },
+    {
+      "step": "advisor chat",
+      "ok": true,
+      "ms": 28.4,
+      "detail": "offline fallback, 7 sources"
+    },
+    {
+      "step": "advisor chat (Hindi)",
+      "ok": true,
+      "ms": 9.2,
+      "detail": "offline fallback, 101 chars"
+    },
+    {
+      "step": "another user cannot see this shop's data",
+      "ok": true,
+      "ms": 278.6,
+      "detail": "isolated"
+    }
+  ]
+}

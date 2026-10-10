@@ -1,104 +1,82 @@
-import { useState } from "react";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ShopSetup from "./pages/ShopSetup";
 import Products from "./pages/Products";
-
 import Suppliers from "./pages/Suppliers";
 import PurchaseEntry from "./pages/PurchaseEntry";
 import Inventory from "./pages/Inventory";
-
 import Dashboard from "./pages/Dashboard";
 import PriceAnalysis from "./pages/PriceAnalysis";
+import Sales from "./pages/Sales";
+import Alerts from "./pages/Alerts";
+import Forecast from "./pages/Forecast";
+import Recommendations from "./pages/Recommendations";
+import Advisor from "./pages/Advisor";
+import Settings from "./pages/Settings";
+import AdvisorWidget from "./components/advisor/AdvisorWidget";
 
 import Sidebar from "./components/Sidebar";
+import RequireAuth from "./components/RequireAuth";
 
 import { AppDataProvider } from "./context/AppDataContext";
+import { AuthProvider } from "./context/AuthContext";
+import { ToastProvider } from "./components/ui/Toast";
 
-const mainScreens = [
-  "dashboard",
-  "products",
-  "suppliers",
-  "purchases",
-  "inventory",
-  "priceAnalysis",
-];
+// Logged-in layout: ONE common sidebar + the page content (same layout as before)
+function MainLayout() {
+  return (
+    <div className="flex h-screen w-full overflow-hidden bg-bg">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto px-8 py-7">
+        <Outlet />
+      </main>
+      <AdvisorWidget />
+    </div>
+  );
+}
 
 export default function App() {
-  const [screen, setScreen] = useState("login");
-  const [shop, setShop] = useState(null);
-
-  const renderPage = () => {
-    switch (screen) {
-      case "dashboard":
-        return <Dashboard />;
-
-      case "products":
-        return <Products shop={shop} />;
-
-      case "suppliers":
-        return <Suppliers />;
-
-      case "purchases":
-        return <PurchaseEntry />;
-
-      case "inventory":
-        return <Inventory />;
-
-      case "priceAnalysis":
-        return <PriceAnalysis />;
-
-      default:
-        return <Dashboard />;
-    }
-  };
-
   return (
-    <AppDataProvider>
-      {/* LOGIN */}
-      {screen === "login" && (
-        <Login
-          onLogin={() => setScreen("dashboard")}
-          onGoToSignup={() => setScreen("signup")}
-        />
-      )}
+    <BrowserRouter>
+      <AuthProvider>
+        <ToastProvider>
+        <AppDataProvider>
+          <Routes>
+            {/* public */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
 
-      {/* SIGNUP */}
-      {screen === "signup" && (
-        <Signup
-          onSignup={() => setScreen("shopSetup")}
-          onGoToLogin={() => setScreen("login")}
-        />
-      )}
+            {/* logged in, shop not needed yet */}
+            <Route element={<RequireAuth needShop={false} />}>
+              <Route path="/shop-setup" element={<ShopSetup />} />
+            </Route>
 
-      {/* SHOP SETUP */}
-      {screen === "shopSetup" && (
-        <ShopSetup
-          onComplete={(data) => {
-            setShop(data);
-            localStorage.setItem("vyapariShop", JSON.stringify(data));
-            setScreen("dashboard");
-          }}
-        />
-      )}
+            {/* logged in AND shop exists */}
+            <Route element={<RequireAuth />}>
+              <Route element={<MainLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/suppliers" element={<Suppliers />} />
+                <Route path="/purchases" element={<PurchaseEntry />} />
+                <Route path="/sales" element={<Sales />} />
+                <Route path="/inventory" element={<Inventory />} />
+                <Route path="/price-analysis" element={<PriceAnalysis />} />
+                <Route path="/forecast" element={<Forecast />} />
+                <Route path="/alerts" element={<Alerts />} />
+                <Route path="/recommendations" element={<Recommendations />} />
+                <Route path="/advisor" element={<Advisor />} />
+                <Route path="/settings" element={<Settings />} />
+              </Route>
+            </Route>
 
-      {/* MAIN APPLICATION */}
-      {mainScreens.includes(screen) && (
-        <div className="flex h-screen w-full overflow-hidden bg-bg">
-          {/* ONE COMMON SIDEBAR */}
-          <Sidebar
-            shopName={shop?.shopName}
-            currentScreen={screen}
-            onNavigate={setScreen}
-          />
-
-          {/* PAGE CONTENT */}
-          <main className="flex-1 overflow-y-auto px-8 py-7">
-            {renderPage()}
-          </main>
-        </div>
-      )}
-    </AppDataProvider>
+            {/* unknown address -> dashboard (the guard sends logged-out users to /login) */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </AppDataProvider>
+        </ToastProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

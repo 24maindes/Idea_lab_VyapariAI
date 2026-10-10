@@ -6,3 +6,19 @@ bcrypt==4.0.1
 python-jose[cryptography]==3.3.0
 python-dotenv==1.0.1
 pydantic[email]==2.9.2
+
+# data pipeline + analysis (Person B)
+pandas
+numpy
+seaborn
+matplotlib
+
+# tests
+pytest
+httpx
+google-genai
+scikit-learn
+xgboost
+statsmodels
+joblib
+python-multipart

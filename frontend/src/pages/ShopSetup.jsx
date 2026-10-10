@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Store, MapPin, ChevronDown } from "lucide-react";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
+import { useAuth } from "../context/AuthContext";
 
 const shopTypes = [
   "Grocery",
@@ -13,20 +15,33 @@ const shopTypes = [
   "Other",
 ];
 
-export default function ShopSetup({ onComplete }) {
+export default function ShopSetup() {
+  const { saveShop } = useAuth();
+  const navigate = useNavigate();
+  const [saving, setSaving] = useState(false);
   const [shopName, setShopName] = useState("");
   const [shopType, setShopType] = useState("");
   const [location, setLocation] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return;                       // ignore double clicks
     if (!shopName.trim() || !shopType || !location.trim()) {
       setError("Please fill in all fields to continue.");
       return;
     }
     setError("");
-    onComplete({ shopName, shopType, location });
+    setSaving(true);
+    try {
+      // POST /api/shop (first time) - the backend keeps the default margin and alert settings
+      await saveShop({ shopName: shopName.trim(), shopType, location: location.trim() });
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (

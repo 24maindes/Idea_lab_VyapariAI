@@ -1,27 +1,23 @@
 import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, Store } from "lucide-react";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
 import loginShop from "../assets/login-shop.png";
+import { useAuth } from "../context/AuthContext";
 
-// See extractErrorMessage in Signup.jsx — FastAPI's `detail` field is a
-// string for our own errors but an array of {msg} objects for pydantic
-// validation errors, which would otherwise render as "[object Object]".
-function extractErrorMessage(data) {
-  const detail = data?.detail;
-  if (!detail) return "Login failed";
-  if (typeof detail === "string") return detail;
-  if (Array.isArray(detail)) {
-    return detail.map((d) => d.msg || JSON.stringify(d)).join(" ");
-  }
-  return "Login failed";
-}
-
-export default function Login({ onLogin, onGoToSignup }) {
+export default function Login() {
+  const { login, token, user } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  // "Session expired" message left by api/client.js when the server answered 401
+  const [error, setError] = useState(() => {
+    const m = sessionStorage.getItem("vyapariSessionMessage");
+    sessionStorage.removeItem("vyapariSessionMessage");
+    return m || "";
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,22 +26,17 @@ export default function Login({ onLogin, onGoToSignup }) {
       return;
     }
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(extractErrorMessage(data));
-
-      localStorage.setItem("vyapariToken", data.access_token);
-      localStorage.setItem("vyapariUser", JSON.stringify(data.user));
+      // AuthContext calls POST /api/auth/login, stores the token and loads the shop
+      await login(email, password);
       setError("");
-      onLogin();
+      navigate("/dashboard", { replace: true });   // no shop yet? the route guard sends the user to /shop-setup
     } catch (err) {
       setError(err.message);
     }
   };
+
+  // already logged in -> no need to see the login page
+  if (token && user) return <Navigate to="/dashboard" replace />;
 
   return (
     <div className="flex min-h-screen w-full bg-bg">
@@ -142,7 +133,7 @@ export default function Login({ onLogin, onGoToSignup }) {
           <p className="text-center text-[13px] text-ink/60">
             Don&apos;t have an account?{" "}
             <button
-              onClick={onGoToSignup}
+              onClick={() => navigate("/signup")}
               className="font-medium text-secondary hover:text-primary"
             >
               Sign up

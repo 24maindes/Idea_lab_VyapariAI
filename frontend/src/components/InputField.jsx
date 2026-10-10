@@ -8,6 +8,7 @@ export default function InputField({
   error,
   rightElement,
   name,
+  ...rest
 }) {
   return (
     <div className="w-full">
@@ -28,6 +29,7 @@ export default function InputField({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
+          {...rest}
           className="w-full bg-transparent text-[14px] text-ink placeholder:text-ink/35 focus:outline-none"
         />
         {rightElement}

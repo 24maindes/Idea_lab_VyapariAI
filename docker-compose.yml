@@ -1,0 +1,37 @@
+# Run everything locally with PostgreSQL:   docker compose up --build
+# Then open http://localhost:8080   (demo login after seeding: demo@vyapariai.com / demo1234)
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vyapari
+      POSTGRES_PASSWORD: vyapari_dev_password
+      POSTGRES_DB: vyapariai
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vyapari -d vyapariai"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://vyapari:vyapari_dev_password@db:5432/vyapariai
+      SECRET_KEY: ${SECRET_KEY:-change-this-to-a-long-random-string-before-real-use-123456}
+      CORS_ORIGINS: http://localhost:8080
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-}
+    depends_on:
+      db: {condition: service_healthy}
+    ports: ["8000:8000"]
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8000
+    ports: ["8080:80"]
+    depends_on: [backend]
+
+volumes:
+  pgdata:

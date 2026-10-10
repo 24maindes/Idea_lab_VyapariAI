@@ -1,0 +1,31 @@
+{
+  "category_share": {
+    "Fresh": 0.361,
+    "Milk": 0.174,
+    "Grocery": 0.239,
+    "Frozen": 0.092,
+    "Detergents_Paper": 0.087,
+    "Delicassen": 0.046
+  },
+  "demand_noise": 0.283,
+  "month_index": {
+    "1": 0.882,
+    "2": 0.645,
+    "3": 0.859,
+    "4": 0.703,
+    "5": 0.9,
+    "6": 0.886,
+    "7": 0.914,
+    "8": 0.96,
+    "9": 1.299,
+    "10": 1.418,
+    "11": 1.717,
+    "12": 0.817
+  },
+  "median_order_units": 25,
+  "sources": [
+    "whole_sale_customers_data.csv",
+    "supermarket_data.csv",
+    "online_sales_dataset.csv"
+  ]
+}
