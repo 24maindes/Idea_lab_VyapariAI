@@ -30,26 +30,33 @@ def _config() -> tuple[str, str]:
 
 def generate(system_instruction: str, contents: list[dict]) -> str:
     """Return the model's answer text, or raise AdvisorUnavailable."""
-    key, model = _config()
+    key, primary_model = _config()
     try:
         from google import genai
         from google.genai import types
     except Exception as e:                                         # the package is not installed
         raise AdvisorUnavailable(f"google-genai is not installed: {e}") from e
 
+    models_to_try = [primary_model]
+    for fallback_m in ("gemini-3.5-flash", "gemini-3.6-flash", "gemini-3.1-flash-lite"):
+        if fallback_m not in models_to_try:
+            models_to_try.append(fallback_m)
+
     last_error: Exception | None = None
-    for _attempt in range(2):                                      # first try + one retry
-        try:
-            client = genai.Client(api_key=key, http_options=types.HttpOptions(timeout=TIMEOUT_SECONDS * 1000))
-            response = client.models.generate_content(
-                model=model, contents=contents,
-                config=types.GenerateContentConfig(system_instruction=system_instruction, temperature=TEMPERATURE))
-            text = (getattr(response, "text", None) or "").strip()
-            if not text:
-                raise AdvisorUnavailable("The model returned an empty answer")
-            return text
-        except AdvisorUnavailable as e:
-            last_error = e
-        except Exception as e:                                     # quota, network, timeout, bad key ...
-            last_error = e
+    client = genai.Client(api_key=key, http_options=types.HttpOptions(timeout=TIMEOUT_SECONDS * 1000))
+    for m in models_to_try:
+        for _attempt in range(2):
+            try:
+                response = client.models.generate_content(
+                    model=m, contents=contents,
+                    config=types.GenerateContentConfig(system_instruction=system_instruction, temperature=TEMPERATURE))
+                text = (getattr(response, "text", None) or "").strip()
+                if text:
+                    return text
+            except Exception as e:
+                last_error = e
+                # If high demand or timeout on this model, break attempt loop to try next healthy model
+                err_str = str(e).lower()
+                if "503" in err_str or "unavailable" in err_str or "504" in err_str or "deadline" in err_str:
+                    break
     raise AdvisorUnavailable(f"Gemini request failed: {type(last_error).__name__}: {last_error}") from last_error
