@@ -4,7 +4,8 @@
 //  - attaches the Bearer token saved at login
 //  - throws Error(message) with the server's "detail" text; error.status holds the HTTP code
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const PROD_API_URL = "https://vyapariai-backend.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? PROD_API_URL : "http://127.0.0.1:8000");
 export const TOKEN_KEY = "vyapariToken";
 export const SESSION_MESSAGE_KEY = "vyapariSessionMessage";
 export const SESSION_EXPIRED_EVENT = "vyapari-session-expired";
