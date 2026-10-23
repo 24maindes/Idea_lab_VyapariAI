@@ -32,3 +32,29 @@ def ensure_reference_data() -> int:
     inserted, _ = load()
     log.info("Loaded %s reference price rows at start-up", inserted)
     return inserted
+
+
+def ensure_demo_data() -> None:
+    """Seeds the demo shop and presentation data if no users exist in the database."""
+    db = SessionLocal()
+    try:
+        from app.models import User
+        if db.execute(select(func.count()).select_from(User)).scalar():
+            return
+    finally:
+        db.close()
+
+    try:
+        from app.ml.seed_demo import main as seed_main
+        seed_main()
+        log.info("Auto-seeded demo shop data at start-up")
+    except Exception as e:
+        log.exception("Could not seed demo shop data at start-up: %s", e)
+
+    try:
+        from scripts.enrich_presentation_data import main as enrich_main
+        enrich_main()
+        log.info("Auto-enriched presentation data at start-up")
+    except Exception as e:
+        log.exception("Could not enrich presentation data at start-up: %s", e)
+

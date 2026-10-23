@@ -22,13 +22,14 @@ Base.metadata.create_all(bind=engine)
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     try:
-        from app.startup import ensure_reference_data
+        from app.startup import ensure_reference_data, ensure_demo_data
         ensure_reference_data()                      # empty reference_prices -> load the CSV (idempotent)
+        ensure_demo_data()                           # empty users -> seed demo shop & enrich data
         import threading
         from app.services.forecast_service import warm_up
         threading.Thread(target=warm_up, daemon=True).start()     # load the saved models in the background
     except Exception:                                # a start-up convenience must never stop the server
-        log.exception("Could not load the reference prices at start-up")
+        log.exception("Could not initialize startup data")
     yield
 
 
