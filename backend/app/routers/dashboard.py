@@ -67,7 +67,7 @@ def summary(db: Session = Depends(get_db), shop: Shop = Depends(get_current_shop
                           .order_by(ActivityLog.created_at.desc(), ActivityLog.id.desc()).limit(6)).scalars().all()
     latest_alerts = db.execute(select(Alert).where(Alert.shop_id == shop.id).order_by(Alert.is_read, Alert.created_at.desc(), Alert.id.desc()).limit(3)).scalars().all()
 
-    heavy = get_or_set(shop.id, "dashboard-heavy", 60, lambda: _heavy_part(db, shop)) if total_products else \
+    heavy = get_or_set(shop.id, "dashboard-heavy", 600, lambda: _heavy_part(db, shop)) if total_products else \
         {"topRecommendations": [], "fairPrice": {"overpayingProducts": 0, "potentialSavings90d": 0.0}}
 
     return {
